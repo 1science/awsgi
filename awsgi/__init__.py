@@ -45,8 +45,10 @@ class StartResponse:
         return self.body.write
 
     def response(self, output):
-        content_encoding = dict(self.headers).get('Content-Encoding', None)
-        content_type = dict(self.headers).get('Content-Type', None)
+        headers = dict(self.headers)
+
+        content_encoding = headers.get('Content-Encoding')
+        content_type = headers.get('Content-Type')
         isBase64Encoded = _base64_encode(content_encoding, content_type)
 
         return {
