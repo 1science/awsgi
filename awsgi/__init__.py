@@ -1,10 +1,31 @@
 from io import StringIO, BytesIO
 import sys
 from urllib.parse import urlencode
+from functools import partial
+import base64
 
 
-def convert_str(s):
-    return s.decode('utf-8') if isinstance(s, bytes) else s
+BINARY_ENCODINGS = [
+    "gzip"
+]
+
+
+BINARY_CONTENT_TYPES = [
+    "application/font-woff"
+]
+
+
+def convert_str(b64, s):
+    # encodes binary data using base64
+    if b64:
+        return base64.b64encode(s).decode('utf-8')
+    else:
+        return s.decode('utf-8') if isinstance(s, bytes) else s
+
+
+def _base64_encode(content_encoding, content_type):
+    return content_encoding in BINARY_ENCODINGS or content_type in BINARY_CONTENT_TYPES
+
 
 def response(app, event, context):
     sr = StartResponse()
@@ -24,10 +45,17 @@ class StartResponse:
         return self.body.write
 
     def response(self, output):
+        headers = dict(self.headers)
+
+        content_encoding = headers.get('Content-Encoding')
+        content_type = headers.get('Content-Type')
+        isBase64Encoded = _base64_encode(content_encoding, content_type)
+
         return {
             'statusCode': str(self.status),
             'headers': dict(self.headers),
-            'body': self.body.getvalue() + ''.join(map(convert_str, output)),
+            'body': self.body.getvalue() + ''.join(map(partial(convert_str, isBase64Encoded), output)),
+            'isBase64Encoded': isBase64Encoded
         }
 
 
