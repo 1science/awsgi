@@ -75,7 +75,9 @@ def environ(event, context):
         'wsgi.multithread': False,
         'wsgi.multiprocess': False,
         'wsgi.run_once': False,
+        'config': event.get('requestContext', {}).get('authorizer', {}).get('config')
     }
+
     headers = event.get('headers', {})
     for k, v in headers.items():
         k = k.upper().replace('-', '_')
