@@ -3,6 +3,10 @@ import sys
 from urllib.parse import urlencode
 from functools import partial
 import base64
+import logging
+
+
+logger = logging.getLogger('awsgi')
 
 
 BINARY_ENCODINGS = [
@@ -28,6 +32,8 @@ def _base64_encode(content_encoding, content_type):
 
 
 def response(app, event, context):
+    logger.debug(f'Received event {event}')
+
     sr = StartResponse()
     output = app(environ(event, context), sr)
     return sr.response(output)
