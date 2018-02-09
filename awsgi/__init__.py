@@ -59,6 +59,8 @@ class StartResponse:
 
         return {
             'statusCode': str(self.status),
+            # for compatibility with "AWS" integration (instead of AWS_PROXY)
+            'errorMessage': str(self.status),
             'headers': dict(self.headers),
             'body': self.body.getvalue() + ''.join(map(partial(convert_str, isBase64Encoded), output)),
             'isBase64Encoded': isBase64Encoded
