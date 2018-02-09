@@ -80,8 +80,7 @@ def environ(event, context):
         'wsgi.errors': sys.stderr,
         'wsgi.multithread': False,
         'wsgi.multiprocess': False,
-        'wsgi.run_once': False,
-        'config': event.get('requestContext', {}).get('authorizer', {}).get('config')
+        'wsgi.run_once': False
     }
 
     headers = event.get('headers', {})
@@ -100,5 +99,8 @@ def environ(event, context):
             environ['SERVER_PORT'] = v
 
         environ['HTTP_' + k] = v
+
+    environ['HTTP_X_1SCIENCE_CONFIG'] = event.get(
+        'requestContext', {}).get('authorizer', {}).get('config')
 
     return environ
