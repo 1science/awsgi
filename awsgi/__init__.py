@@ -57,6 +57,9 @@ class StartResponse:
         content_type = headers.get('Content-Type')
         isBase64Encoded = _base64_encode(content_encoding, content_type)
 
+        logger.debug("content_encoding: %r, content_type: %r, isBase64Encoded: %r", content_encoding, content_type,
+                     isBase64Encoded)
+
         return {
             'statusCode': str(self.status),
             'headers': dict(self.headers),
