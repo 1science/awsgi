@@ -15,7 +15,10 @@ BINARY_ENCODINGS = [
 
 
 BINARY_CONTENT_TYPES = [
-    "application/font-woff"
+    "application/font-woff",
+    "image/png",
+    "image/jpg",
+    "image/jpeg",
 ]
 
 
