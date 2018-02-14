@@ -53,10 +53,9 @@ class StartResponse:
         self.headers[:] = headers
         return self.body.write
 
-    def response(self, out):
+    def response(self, output):
         headers = dict(self.headers)
         body = self.body.getvalue()
-        output = out.getvalue() if hasattr(out, 'getvalue') else out
 
         logger.debug("Response headers: %r", headers)
         logger.debug("Response body: %r", body)
