@@ -55,6 +55,10 @@ class StartResponse:
 
     def response(self, output):
         headers = dict(self.headers)
+        body = self.body.getvalue()
+
+        logger.debug("Response headers: %r", headers)
+        logger.debug("Response body: %r", body)
 
         content_encoding = headers.get('Content-Encoding')
         content_type = headers.get('Content-Type')
@@ -66,7 +70,7 @@ class StartResponse:
         return {
             'statusCode': str(self.status),
             'headers': dict(self.headers),
-            'body': self.body.getvalue() + ''.join(map(partial(convert_str, isBase64Encoded), output)),
+            'body': body + ''.join(map(partial(convert_str, isBase64Encoded), output)),
             'isBase64Encoded': isBase64Encoded
         }
 
