@@ -100,7 +100,9 @@ def environ(event, context):
 
         environ['HTTP_' + k] = v
 
-    environ['HTTP_X_1SCIENCE_CONFIG'] = event.get(
+    config = event.get(
         'requestContext', {}).get('authorizer', {}).get('config')
+    if config:
+        environ['HTTP_X_1SCIENCE_CONFIG'] = config
 
     return environ
