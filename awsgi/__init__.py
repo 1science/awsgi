@@ -66,17 +66,24 @@ class StartResponse:
 
 
 def environ(event, context):
+
+    request_body = event.get('body') or ''
+    if event['isBase64Encoded']:
+        request_body = base64.b64decode(request_body)
+    else:
+        request_body = request_body.encode('utf-8')
+
     environ = {
         'REQUEST_METHOD': event['httpMethod'],
         'SCRIPT_NAME': '',
         'PATH_INFO': event['path'],
         'QUERY_STRING': urlencode(event['queryStringParameters'] or {}),
         'REMOTE_ADDR': '127.0.0.1',
-        'CONTENT_LENGTH': str(len(event.get('body', '') or '')),
+        'CONTENT_LENGTH': str(len(request_body)),
         'HTTP': 'on',
         'SERVER_PROTOCOL': 'HTTP/1.1',
         'wsgi.version': (1, 0),
-        'wsgi.input': BytesIO((event.get('body', '') or '').encode('utf-8')),
+        'wsgi.input': BytesIO(request_body),
         'wsgi.errors': sys.stderr,
         'wsgi.multithread': False,
         'wsgi.multiprocess': False,
