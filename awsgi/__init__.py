@@ -105,7 +105,7 @@ def environ(event, context):
         elif k == 'X_FORWARDED_PORT':
             environ['SERVER_PORT'] = v
 
-        environ['HTTP_' + k] = v
+        environ['HTTP_' + k] = v.encode('ascii', 'replace').decode('ascii')
 
     environ['HTTP_X_1SCIENCE_CONFIG'] = event.get(
         'requestContext', {}).get('authorizer', {}).get('config')
